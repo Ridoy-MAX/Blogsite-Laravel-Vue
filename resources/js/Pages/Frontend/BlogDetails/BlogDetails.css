@@ -1,0 +1,45 @@
+.blog_details .bradcome a{
+    text-decoration: none;
+    margin: 5px;
+    color: rgb(12, 12, 12);
+    font-weight: 800;
+ 
+}
+.blog_details .bradcome a:hover{
+    color: blue;
+}
+.blog_details h2{
+    background: -webkit-gradient(linear, left top, right top, from(#7338e7), to(#7338e7));
+    background: -o-linear-gradient(left, #7338e7 0%, #7338e7 100%);
+    background: linear-gradient(90deg, #7338e7, #2a0379);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    font-weight: 700;
+    font-family: var(--family1);
+    font-size: 30px;
+    line-height: 1.15em;
+ 
+    display: flex;
+    /* justify-content: center; */
+}
+.blog_details .sidebar_blog{
+    padding-top: 100px;
+}
+.blog_details .sidebar_blog p{
+    color: white;
+    font-size: 16px;
+}
+.blog_details .sidebar_blog p:hover{
+    color: #2a0379;
+}
+.blog_details .sidebar_blog .sidebar_blog_card{
+  margin-top: 10px;
+}
+.blog_details .count{
+  margin-bottom: 10px;
+}
+.blog_details .count span{
+    color: rgba(19, 19, 19, 0.979);
+}
+ 
