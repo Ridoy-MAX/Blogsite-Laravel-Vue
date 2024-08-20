@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('Admin/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('Admin/dashboard/block/user', [HomeController::class, 'block_users'])->name('block.user');
+    Route::post('Admin/user/unblock/{id}', [HomeController::class, 'users_unblock'])->name('users.unblock');
+
     Route::put('users/{user}', [HomeController::class, 'update'])->name('users.update');
 
     // Route to delete the user

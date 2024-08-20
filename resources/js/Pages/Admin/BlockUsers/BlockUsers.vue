@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { ref, watch, onMounted } from 'vue';
+import { Link } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 
 // Define props
@@ -20,18 +21,15 @@ const props = defineProps({
     },
     perPage: {
         type: Number,
-        default: 10, // Adjust as necessary
-    }
-    
+        default: 10,
+    },
 });
 
 // State variables
 const currentPage = ref(props.currentPage);
 const searchQuery = ref('');
-const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const selectedUser = ref(null);
-const updatedUser = ref({ name: '', email: '' });
 const successMessage = ref('');
 
 // Access Inertia page properties
@@ -51,7 +49,7 @@ watch(() => props.currentPage, (newPage) => {
 
 // Watch for changes in searchQuery
 watch(searchQuery, (newQuery) => {
-    router.get(route('dashboard'), { page: 1, search: newQuery }, { preserveState: true });
+    router.get(route('block.user'), { page: 1, search: newQuery }, { preserveState: true });
 });
 
 // Format date
@@ -60,73 +58,64 @@ const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-// Handlers
-const handleEdit = (user) => {
-    selectedUser.value = user;
-    updatedUser.value = { name: user.name, email: user.email };
-    showEditModal.value = true;
-};
-
+// Handle user unblock
 const handleDelete = (user) => {
     selectedUser.value = user;
     showDeleteModal.value = true;
 };
 
+// Close all modals
 const closeModals = () => {
-    showEditModal.value = false;
     showDeleteModal.value = false;
     selectedUser.value = null;
 };
 
-const updateUser = async () => {
-    try {
-        await router.put(route('users.update', selectedUser.value.id), updatedUser.value);
-        Swal.fire({
-            icon: 'success',
-            title: 'User Updated',
-            text: 'The user has been updated successfully.',
-        }).then(() => {
-            fetchUsers(currentPage.value, searchQuery.value);
-            closeModals();
-        });
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Update Failed',
-            text: 'There was an issue updating the user.',
-        });
-    }
-};
-
+// Perform the unblock action and close the modal
 const deleteUser = async () => {
     try {
-        await router.delete(route('users.destroy', selectedUser.value.id));
-        Swal.fire({
-            icon: 'success',
-            title: 'User Blocked',
-            text: 'The user has been Blocked successfully.',
-        }).then(() => {
-            fetchUsers(currentPage.value, searchQuery.value);
-            closeModals();
-        });
+        await router.post(route('users.unblock'));
+        // Refresh the user list after unblocking
+        fetchUsers(currentPage.value, searchQuery.value);
+        closeModals(); // Close the modal after the user is unblocked
     } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Delete Failed',
-            text: 'There was an issue deleting the user.',
-        });
+        console.error('Error unblocking user:', error.response ? error.response.data : error.message);
     }
 };
 
+// Method to unblock a user directly from the button click
+const unblockUser = async (userId) => {
+    console.log('done')
+    try {
+        await router.post(route('users.unblock', { id: userId }));
+
+        Swal.fire({
+            icon: 'success',
+            title: 'User  Unblocked',
+            text: 'The user has been Unblocked successfully.',
+        }).then(() => {
+            // fetchUsers(currentPage.value, searchQuery.value);
+            closeModals();
+        });
+        // Refresh the user list after unblocking
+        // fetchUsers(currentPage.value, searchQuery.value);
+    } catch (error) {
+        console.error('Error unblocking user:', error.response ? error.response.data : error.message);
+    }
+};
+
+
+// Handle page change
 const handlePageChange = (pageNumber) => {
     currentPage.value = pageNumber;
-    router.get(route('dashboard'), { page: pageNumber, search: searchQuery.value }, { preserveState: true });
+    router.get(route('block.user'), { page: pageNumber, search: searchQuery.value }, { preserveState: true });
 };
 
+// Fetch users with the current page and search query
 const fetchUsers = (page, query) => {
-    router.get(route('dashboard'), { page, search: query }, { preserveState: true });
+    router.get(route('block.user'), { page, search: query }, { preserveState: true });
 };
 
+// Calculate the serial number for users in the current page
 const calculateSerialNumber = (index) => {
     return (currentPage.value - 1) * props.perPage + (index + 1);
 };
@@ -134,11 +123,11 @@ const calculateSerialNumber = (index) => {
 
 <template>
 
-     <Head title="Dashboard" />
+    <Head title="Block Users" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Block Users</h2>
         </template>
 
         <div class="py-12">
@@ -148,7 +137,8 @@ const calculateSerialNumber = (index) => {
                         <h3 class="text-lg font-semibold mb-4">User List</h3>
 
                         <!-- Success Message -->
-                        <div v-if="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                        <div v-if="successMessage"
+                            class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
                             {{ successMessage }}
                         </div>
 
@@ -169,24 +159,26 @@ const calculateSerialNumber = (index) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-    <tr v-for="(user, index) in props.users" :key="user.id" class="w-full">
-        <!-- Serial Number -->
-        <td class="py-2 px-4 border-b">{{ (currentPage - 1) * perPage + (index + 1) }}</td>
-        
-        <!-- User Details -->
-        <td class="py-2 px-4 border-b">{{ user.name }}</td>
-        <td class="py-2 px-4 border-b">{{ user.email }}</td>
-        <td class="py-2 px-4 border-b">{{ formatDate(user.created_at) }}</td>
-        <td class="py-2 px-4 border-b">
-            <!-- Edit and Delete Buttons -->
-            <button class="text-blue-500 text-white bg-sky-500 p-2" @click="handleEdit(user)">Edit</button>
-            <button class="text-red-500 text-white ml-2 bg-red-900 p-2" @click="handleDelete(user)">Block</button>
-        </td>
-    </tr>
-</tbody>
+                                    <tr v-for="(user, index) in props.users" :key="user.id" class="w-full">
+                                        <!-- Serial Number -->
+                                        <td class="py-2 px-4 border-b">{{ calculateSerialNumber(index) }}</td>
 
+                                        <td class="py-2 px-4 border-b">{{ user.name }}</td>
+                                        <td class="py-2 px-4 border-b">{{ user.email }}</td>
+                                        <td class="py-2 px-4 border-b">{{ formatDate(user.created_at) }}</td>
+                                        <td class="py-2 px-4 border-b">
+                                            <button class="text-red-500 text-white ml-2 bg-red-900 p-2"
+                                                @click="unblockUser(user.id)">Unblock</button>
+                                             
+                                        </td>
+
+                                     
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
+
+                   
 
                         <!-- Pagination -->
                         <div class="flex justify-between items-center mt-4">
@@ -203,50 +195,14 @@ const calculateSerialNumber = (index) => {
                             </button>
                         </div>
 
-                        <!-- Edit Modal -->
-                        <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center ">
-                            <div class=" p-4 sm:p-8  dark:bg-gray-800 shadow sm:rounded-lg">
-
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Edit User</h2>
-
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    Update your account's profile information and email address.
-                                </p>
-
-                                <form @submit.prevent="updateUser">
-                                    <div class="mb-4">
-                                        <label for="name" class="">Name</label>
-
-                                        <input type="text" id="name" v-model="updatedUser.name"
-                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-100" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="email" class="">Email</label>
-                                        <input type="email" id="email" v-model="updatedUser.email"
-                                            class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-100" />
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <button type="button" @click="closeModals"
-                                            class="px-4 py-2 bg-gray-300 rounded mr-2">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" class="px-4 py-2 bg-sky-500 text-white rounded">
-                                            Save
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
                         <!-- Delete Modal -->
                         <div v-if="showDeleteModal"
                             class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div class=" p-6 rounded-lg shadow-lg p-4 sm:p-8  dark:bg-gray-800 shadow sm:rounded-lg">
-
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Block User</h2>
+                            <div class="p-6 rounded-lg shadow-lg p-4 sm:p-8 dark:bg-gray-800 shadow sm:rounded-lg">
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Unblock User</h2>
 
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    Are you sure you want to Block this user?
+                                    Are you sure you want to unblock this user?
                                 </p>
 
                                 <div class="flex justify-end mt-4">
@@ -255,7 +211,7 @@ const calculateSerialNumber = (index) => {
                                         Cancel
                                     </button>
                                     <button @click="deleteUser" class="px-4 py-2 bg-red-500 text-white rounded">
-                                        Delete
+                                        Unblock
                                     </button>
                                 </div>
                             </div>
