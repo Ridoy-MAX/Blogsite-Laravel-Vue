@@ -76,6 +76,9 @@ defineProps({
 }
 .blog_card .image img {
     border-radius: 15px;
+    height: 200px;
+    width: 100%;
+    background-size: cover;
 
 }
 

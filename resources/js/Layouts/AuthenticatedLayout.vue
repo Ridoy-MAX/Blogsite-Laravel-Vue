@@ -137,6 +137,12 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('blogs')" :active="route().current('blogs')">
                             Blogs
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('home.banner')" :active="route().current('home.banner')">
+                            CMS
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('contact.list')" :active="route().current('contact.list')">
+                            Contact List
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
