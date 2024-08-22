@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Blog;
+use App\Models\Contact;
+use App\Models\Home;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +21,14 @@ class HomeController extends Controller
     public function home(Request $request)
     {
         $blogs = Blog::with('user')-> where('status','active')->get();
+
+        $title = Home::where('type','title')->first();
+        $description = Home::where('type','description')->first();
+        $facebook = Home::where('type','facebook')->first();
+        $instagram = Home::where('type','instagram')->first();
+        $twitter = Home::where('type','twitter')->first();
+        $threads = Home::where('type','threads')->first();
+        $about = Home::where('type','about')->first();
         // $users = $blogs->user;
         return Inertia::render('Frontend/Home/Home', [
             'canLogin' => Route::has('login'),
@@ -26,9 +36,100 @@ class HomeController extends Controller
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
             'blogs' => $blogs,
+            'title' => $title,
+            'description' => $description,
+            'facebook' => $facebook,
+            'instagram' => $instagram,
+            'twitter' => $twitter,
+            'threads' => $threads,
+            'about' => $about,
             // 'users' => $users,
         ]);
     }
+
+    public function home_banner(Request $request)
+    {
+   
+
+        $title = Home::where('type','title')->first();
+        $description = Home::where('type','description')->first();
+        $facebook = Home::where('type','facebook')->first();
+        $instagram = Home::where('type','instagram')->first();
+        $twitter = Home::where('type','twitter')->first();
+        $threads = Home::where('type','threads')->first();
+        $about = Home::where('type','about')->first();
+        // $users = $blogs->user;
+        return Inertia::render('Admin/HomeBanner/HomeBanner', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+            'title' => $title,
+            'description' => $description,
+            'facebook' => $facebook,
+            'instagram' => $instagram,
+            'twitter' => $twitter,
+            'threads' => $threads,
+            'about' => $about,
+            // 'users' => $users,
+        ]);
+    }
+    public function home_banner_update(Request $request)
+    {
+        // Update the title
+        $title = Home::where('type', 'title')->first();
+        if ($title) {
+            $title->title = $request->title;  // Assuming 'title' is the input name in the form
+            $title->save();
+        }
+    
+        // Update the description
+        $description = Home::where('type', 'description')->first();
+        if ($description) {
+            $description->title = $request->description;  // Assuming 'description' is the input name in the form
+            $description->save();
+        }
+    
+        // Update the Facebook link
+        $facebook = Home::where('type', 'facebook')->first();
+        if ($facebook) {
+            $facebook->title = $request->facebook;  // Assuming 'facebook' is the input name in the form
+            $facebook->save();
+        }
+    
+        // Update the Instagram link
+        $instagram = Home::where('type', 'instagram')->first();
+        if ($instagram) {
+            $instagram->title = $request->instagram;  // Assuming 'instagram' is the input name in the form
+            $instagram->save();
+        }
+    
+        // Update the Twitter link
+        $twitter = Home::where('type', 'twitter')->first();
+        if ($twitter) {
+            $twitter->title = $request->twitter;  // Assuming 'twitter' is the input name in the form
+            $twitter->save();
+        }
+    
+        // Update the Threads link
+        $threads = Home::where('type', 'threads')->first();
+        if ($threads) {
+            $threads->title = $request->threads;  // Assuming 'threads' is the input name in the form
+            $threads->save();
+        }
+    
+        // Update the About section
+        $about = Home::where('type', 'about')->first();
+        if ($about) {
+            $about->title = $request->about;  // Assuming 'about' is the input name in the form
+            $about->save();
+        }
+    
+        // dd('done');
+        return redirect()->back()->with('success', 'Home Banner updated successfully!');
+    }
+    
+
     public function dashboard(Request $request)
     {
         // Fetch paginated users
@@ -105,57 +206,31 @@ class HomeController extends Controller
     }
 
 
+    public function contact_submit(Request $request){
+        // dd($request);
 
-
-    public function blogs(Request $request)
-    {
-        $blogs = Blog::with('user')->get();
-        return inertia('Admin/Blog/Blog', [
-            'blogs' => $blogs,
-        ]);
-    }
-
-    public function blogs_create(Request $request)
-    {
-        $blogs = Blog::get();
-        return inertia('Admin/Blog/BlogCreate', [
-            'blogs' => $blogs,
-        ]);
-    }
-
-    public function blogs_add(Request $request)
-    {
-
-        // return response()->json(['message' => 'Blog created successfully.']);
-
-        $slug = Str::slug($request->title);
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image'); // Get the uploaded file
-            $imageName = '/images/' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-        } else {
-            return response()->json(['error' => 'Image not uploaded.'], 400);
-        }
-
-
-        // $image = $request->file('image'); // Get the uploaded file
-        // $imageName = $image; // Generate a unique name for the image
-        // dd($imageName);
-
-
-
-        // Create a new blog instance and save it to the database
-        $blog = new Blog();
-        $blog->user_id = Auth::id(); // Set the user_id to the authenticated user's ID
-        $blog->slug = $slug; // Save the generated slug
-        $blog->title = $request->title;
-        $blog->description = $request->description;
-        $blog->status = $request->status;
-        $blog->image = $imageName; // Save the image name
+        $blog = new Contact();
+  
+        $blog->name = $request->fullName;
+        $blog->email = $request->email;
+        $blog->subject = $request->subject;
+        $blog->message = $request->message;
         $blog->save();
-
-        return redirect()->route('blogs')->with('success', 'User deleted successfully.');
-        // return response()->json(['message' => 'Blog created successfully.']);
     }
+
+    public function contact_list(Request $request){
+        // dd($request);
+
+        $contacts = Contact::paginate(10);
+        return Inertia::render('Admin/Contact/Contact', [
+         
+            'contacts' => $contacts,
+            // 'users' => $users,
+        ]);
+ 
+    }
+
+
+
+
 }

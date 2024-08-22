@@ -30,8 +30,8 @@ function handleScroll() {
             <div>
                 <header :class="['header', { 'scrolledNavbar': scrolled }]">
                     <Link
-                        href="mailto:pou4w98y@gmail.com?subject=Hello&body=I%20would%20like%20to%20contact%20you%20regarding%20your%20portfolio."
-                        target="_blank" class="logo_email_link_m">
+                       :href="route('home')"
+                        class="logo_email_link_m">
                     <div class="logo_email">
                         <i class="fa-solid fa-icons"></i>
                     </div>
@@ -51,8 +51,8 @@ function handleScroll() {
 
                                         <div class="d-flex justify-content-center">
                                             <Link
-                                                href=""
-                                                target="_blank" rel="noopener noreferrer" class="logo_email_link">
+                                                  :href="route('home')"
+                                              rel="noopener noreferrer" class="logo_email_link">
                                             <div class="logo_email">
                                                 <i class="fa-solid fa-icons"></i>
                                             </div>

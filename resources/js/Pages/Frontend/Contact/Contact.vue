@@ -1,29 +1,46 @@
 <script setup>
 import { reactive } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
 import './Contact.css';
 
-// Reactive form data object
-const formData = reactive({
+
+
+const form = useForm({
   fullName: '',
   email: '',
   subject: '',
   message: ''
 });
-
 // Handle form submission
-function handleSubmit(e) {
-  e.preventDefault();
-  console.log('Form submitted:', formData);
 
-  // Add your form submission logic here (e.g., send the data to a backend)
-}
 
-// Handle form data change
-function handleChange(event) {
-  const { name, value } = event.target;
-  formData[name] = value;
-}
+const submitForm = () => {
+    form.post(route('contact.submit'), {
+        onError: (errors) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Create Failed',
+                text: 'There was an issue creating the blog.',
+            });
+        },
+        onSuccess: () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Submit successfully',
+       
+            }).then(() => {
+                // Reset form data
+                form.reset();
+
+              
+            });
+        }
+    });
+};
+
+
 </script>
 
 <template>
@@ -38,7 +55,7 @@ function handleChange(event) {
               <div class="col-md-8">
                 <div class="contact_left">
                   <h1 class='mb-3'>Contact</h1>
-                  <form class="from" @submit="handleSubmit">
+                  <form class="from" @submit.prevent="submitForm" >
                     <div class="from_control">
                       <p>Full Name</p>
                       <div class="input">
@@ -46,7 +63,7 @@ function handleChange(event) {
                           type="text" 
                           id="fullName" 
                           name="fullName"
-                          v-model="formData.fullName"
+                          v-model="form.fullName"
                           required 
                         />
                       </div>
@@ -58,7 +75,7 @@ function handleChange(event) {
                           type="email" 
                           id="email" 
                           name="email"
-                          v-model="formData.email"
+                          v-model="form.email"
                           required 
                         />
                       </div>
@@ -70,7 +87,7 @@ function handleChange(event) {
                           type="text" 
                           id="subject" 
                           name="subject"
-                          v-model="formData.subject"
+                          v-model="form.subject"
                           required 
                         />
                       </div>
@@ -82,7 +99,7 @@ function handleChange(event) {
                           id="message" 
                           name="message"
                           rows="3" 
-                          v-model="formData.message"
+                          v-model="form.message"
                           required 
                         ></textarea>
                       </div>

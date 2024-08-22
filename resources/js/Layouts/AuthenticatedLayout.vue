@@ -40,6 +40,12 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('blogs')" :active="route().current('blogs')" style="text-decoration: none;">
                                     Blogs
                                 </NavLink>
+                                <NavLink :href="route('home.banner')" :active="route().current('home.banner')" style="text-decoration: none;">
+                                    CMS
+                                </NavLink>
+                                <NavLink :href="route('contact.list')" :active="route().current('contact.list')" style="text-decoration: none;">
+                                    Contact List
+                                </NavLink>
                             </div>
                         </div>
 

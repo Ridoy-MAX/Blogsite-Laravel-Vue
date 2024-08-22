@@ -8,41 +8,37 @@ import Swal from 'sweetalert2';
 
 const props = defineProps({
     blogs: {
-        type: Array, // Use Array to handle multiple blogs if needed
+        type: Object, // Use Object to handle a single blog
         required: true
     }
 });
+
 // Use the useForm hook to handle form data and submission
 const form = useForm({
     title: props.blogs.title,
+    slug: props.blogs.slug,
     description: props.blogs.description,
     status: props.blogs.status,
     image: null, // To store uploaded image
 });
 
-// onMounted(() => {
-//     form.title = ;
-//     form.description = props.blogs.description;
-//     form.status = props.blogs.status;
-// });
-// Ref for the file input
 const fileInputRef = ref(null);
 
 // Handle form submission
 const submitForm = () => {
-    form.put(route('blog.update',props.blogs.slug), {
+    form.post(route('blog.update'), {
         onError: (errors) => {
             Swal.fire({
                 icon: 'error',
-                title: 'Create Failed',
-                text: 'There was an issue creating the blog.',
+                title: 'Update Failed',
+                text: 'There was an issue updating the blog.',
             });
         },
         onSuccess: () => {
             Swal.fire({
                 icon: 'success',
-                title: 'Blog Created',
-                text: 'The blog has been created successfully.',
+                title: 'Blog Updated',
+                text: 'The blog has been updated successfully.',
             }).then(() => {
                 // Reset form data
                 form.reset();
@@ -58,22 +54,22 @@ const submitForm = () => {
 </script>
 
 <template>
-    <Head title="Blog Create" />
+    <Head title="Blog Update" />
     <AuthenticatedLayout>
         <section>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 p-3">
                 <header>
                     <div class="d-flex justify-content-between">
-                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Add Blog Information</h2>
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Edit Blog Information</h2>
                         <Link :href="route('blogs')" class="btn btn-danger">Back</Link>
                     </div>
                 </header>
                 <form @submit.prevent="submitForm" class="mt-6 space-y-6" enctype="multipart/form-data">
                     <div>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Title  </p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Title</p>
                         <input id="title" v-model="form.title" type="text"
                             class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-100"
-                            required autofocus  />
+                            required autofocus />
                         <InputError class="mt-2" :message="form.errors.title" />
                     </div>
 
@@ -90,7 +86,7 @@ const submitForm = () => {
                         <select id="status" v-model="form.status"
                             class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-100"
                             required>
-                            <option selected disabled>Select status</option>
+                            <option value="" disabled>Select status</option>
                             <option value="Active">Active</option>
                             <option value="Deactive">Deactive</option>
                         </select>
@@ -105,8 +101,8 @@ const submitForm = () => {
                         </progress>
                         <InputError class="mt-2" :message="form.errors.image" />
                     </div>
-                    <div>
-                        <img :src="props.blogs.image" alt="" width="300px">
+                    <div v-if="props.blogs.image">
+                        <img :src="props.blogs.image" alt="Blog Image" width="300px">
                     </div>
 
                     <div class="flex items-center gap-4">

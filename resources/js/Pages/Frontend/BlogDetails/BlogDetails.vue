@@ -29,6 +29,10 @@ const props = defineProps({
     blogs: {
         type: Array, // Use Array to handle multiple blogs if needed
         required: true
+    },
+    latestblogs: {
+        type: Array, // Use Array to handle multiple blogs if needed
+        required: true
     }
 });
 </script>
@@ -60,7 +64,7 @@ const props = defineProps({
                         <h2>{{ props.blogs.title }} </h2>
                         <div class="count d-flex ">
                             <span><i class="fa-regular fa-user me-1"></i>{{ props.blogs.user.name }}</span>
-                            <span><i class="fa-regular fa-eye ms-5 me-1"></i>{{ props.blogs.view }}</span>
+                            <span><i class="fa-regular fa-eye ms-5 me-1"></i>{{ props.blogs.view }} </span>
                             <span><i class="fa-regular fa-calendar-days ms-5"></i>
                                 {{ new Date(props.blogs.created_at).toLocaleDateString('en-GB', {
                                             day: '2-digit',
@@ -86,87 +90,38 @@ const props = defineProps({
                     <div class="sidebar_blog m-2">
                         <h2>Latest Stories</h2>
 
-                        <div class=" row sidebar_blog_card">
+                        <div class="row sidebar_blog_card"   v-for="(latestblog, index) in latestblogs ">
                             <div class=" col-md-5">
-                                <img src="/blog/two.jpg" alt="" class="w-100">
+                                <img :src="latestblog.image" alt="" class="w-100">
 
                             </div>
 
                             <div class=" col-md-7">
                                 <link rel="stylesheet" href="">
-                                <Link href="">
-                                <p>Top 10 Google’s Most Searched Movies in the World (2022)
-                                </p>
+                                <Link :href="route('blog.details', latestblog.slug)"
+                                            class=" ">
+                                            <p>
+                                                {{ latestblog.title }} 
+
+                                            </p>
                                 </Link>
+
+                                <span>
+                                    <i class="fa-regular fa-calendar-days "></i>
+                                {{ new Date(latestblog.created_at).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month:
+                                                'long', year: 'numeric'
+                                        }) }}
+
+                               </span>
 
                             </div>
 
                         </div>
 
-                        <div class=" row sidebar_blog_card">
-                            <div class=" col-md-5">
-                                <img src="/blog/two.jpg" alt="" class="w-100">
 
-                            </div>
-
-                            <div class=" col-md-7">
-                                <link rel="stylesheet" href="">
-                                <Link href="">
-                                <p>Top 10 Google’s Most Searched Movies in the World (2022)
-                                </p>
-                                </Link>
-
-                            </div>
-
-                        </div>
-                        <div class=" row sidebar_blog_card">
-                            <div class=" col-md-5">
-                                <img src="/blog/two.jpg" alt="" class="w-100">
-
-                            </div>
-
-                            <div class=" col-md-7">
-                                <link rel="stylesheet" href="">
-                                <Link href="">
-                                <p>Top 10 Google’s Most Searched Movies in the World (2022)
-                                </p>
-                                </Link>
-
-                            </div>
-
-                        </div>
-                        <div class=" row sidebar_blog_card">
-                            <div class=" col-md-5">
-                                <img src="/blog/two.jpg" alt="" class="w-100">
-
-                            </div>
-
-                            <div class=" col-md-7">
-                                <link rel="stylesheet" href="">
-                                <Link href="">
-                                <p>Top 10 Google’s Most Searched Movies in the World (2022)
-                                </p>
-                                </Link>
-
-                            </div>
-
-                        </div>
-                        <div class=" row sidebar_blog_card">
-                            <div class=" col-md-5">
-                                <img src="/blog/two.jpg" alt="" class="w-100">
-
-                            </div>
-
-                            <div class=" col-md-7">
-                                <link rel="stylesheet" href="">
-                                <Link href="">
-                                <p>Top 10 Google’s Most Searched Movies in the World (2022)
-                                </p>
-                                </Link>
-
-                            </div>
-
-                        </div>
+                 
 
                     </div>
 

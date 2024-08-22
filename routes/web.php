@@ -35,12 +35,17 @@ Route::middleware('auth')->group(function () {
     // blog management
     Route::get('Admin/blogs/list', [BlogController::class, 'blogs'])->name('blogs');
     Route::get('Admin/blogs/create', [BlogController::class, 'blogs_create'])->name('blog.create');
-    Route::put('Admin/blogs/update/{slug}', [BlogController::class, 'blogs_update'])->name('blog.update');
+    Route::post('Admin/blogs/update', [BlogController::class, 'blogs_update'])->name('blog.update');
 
     Route::post('Admin/blogs/add', [BlogController::class, 'blogs_add'])->name('blog.add');
     Route::get('/blog/delete/{slug}', [BlogController::class, 'blog_delete'])->name('blog.delete');
     Route::get('/blog/edit/{slug}', [BlogController::class, 'blog_edit'])->name('blog.edit');
     // home page
+    Route::get('Admin/home/banner', [HomeController::class, 'home_banner'])->name('home.banner');
+    Route::post('Admin/home/banner/update', [HomeController::class, 'home_banner_update'])->name('home.banner.update');
+
+    Route::post('contact/submit', [HomeController::class, 'contact_submit'])->name('contact.submit');
+    Route::get('contact/list', [HomeController::class, 'contact_list'])->name('contact.list');
 
 });
 
