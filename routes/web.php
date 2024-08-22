@@ -7,37 +7,40 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Frontend/Home/Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
 
-Route::get('/blog/details', [BlogController::class, 'blog_details'])->name('blog.details');
+
+Route::get('/', [HomeController::class, 'home'])->name('home');
+
+Route::get('/blog/details/{slug}', [BlogController::class, 'blog_details'])->name('blog.details');
+
 
 // Route::get('', function () {
 //     return Inertia::render('Admin/Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    //admin 
+    //user profile 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-
+    // user mangement
     Route::get('Admin/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     Route::get('Admin/dashboard/block/user', [HomeController::class, 'block_users'])->name('block.user');
     Route::post('Admin/user/unblock/{id}', [HomeController::class, 'users_unblock'])->name('users.unblock');
-
     Route::put('users/{user}', [HomeController::class, 'update'])->name('users.update');
-
-    // Route to delete the user
     Route::delete('users/{user}', [HomeController::class, 'destroy'])->name('users.destroy');
+
+    // blog management
+    Route::get('Admin/blogs/list', [BlogController::class, 'blogs'])->name('blogs');
+    Route::get('Admin/blogs/create', [BlogController::class, 'blogs_create'])->name('blog.create');
+    Route::put('Admin/blogs/update/{slug}', [BlogController::class, 'blogs_update'])->name('blog.update');
+
+    Route::post('Admin/blogs/add', [BlogController::class, 'blogs_add'])->name('blog.add');
+    Route::get('/blog/delete/{slug}', [BlogController::class, 'blog_delete'])->name('blog.delete');
+    Route::get('/blog/edit/{slug}', [BlogController::class, 'blog_edit'])->name('blog.edit');
+    // home page
 
 });
 

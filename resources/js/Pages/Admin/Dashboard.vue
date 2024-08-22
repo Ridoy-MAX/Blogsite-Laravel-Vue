@@ -22,7 +22,7 @@ const props = defineProps({
         type: Number,
         default: 10, // Adjust as necessary
     }
-    
+
 });
 
 // State variables
@@ -134,11 +134,11 @@ const calculateSerialNumber = (index) => {
 
 <template>
 
-     <Head title="Dashboard" />
+    <Head title="Dashboard" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">        All Users</h2>
         </template>
 
         <div class="py-12">
@@ -148,7 +148,8 @@ const calculateSerialNumber = (index) => {
                         <h3 class="text-lg font-semibold mb-4">User List</h3>
 
                         <!-- Success Message -->
-                        <div v-if="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                        <div v-if="successMessage"
+                            class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
                             {{ successMessage }}
                         </div>
 
@@ -169,21 +170,24 @@ const calculateSerialNumber = (index) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-    <tr v-for="(user, index) in props.users" :key="user.id" class="w-full">
-        <!-- Serial Number -->
-        <td class="py-2 px-4 border-b">{{ (currentPage - 1) * perPage + (index + 1) }}</td>
-        
-        <!-- User Details -->
-        <td class="py-2 px-4 border-b">{{ user.name }}</td>
-        <td class="py-2 px-4 border-b">{{ user.email }}</td>
-        <td class="py-2 px-4 border-b">{{ formatDate(user.created_at) }}</td>
-        <td class="py-2 px-4 border-b">
-            <!-- Edit and Delete Buttons -->
-            <button class="text-blue-500 text-white bg-sky-500 p-2" @click="handleEdit(user)">Edit</button>
-            <button class="text-red-500 text-white ml-2 bg-red-900 p-2" @click="handleDelete(user)">Block</button>
-        </td>
-    </tr>
-</tbody>
+                                    <tr v-for="(user, index) in props.users" :key="user.id" class="w-full">
+                                        <!-- Serial Number -->
+                                        <td class="py-2 px-4 border-b">{{ (currentPage - 1) * perPage + (index + 1) }}
+                                        </td>
+
+                                        <!-- User Details -->
+                                        <td class="py-2 px-4 border-b">{{ user.name }}</td>
+                                        <td class="py-2 px-4 border-b">{{ user.email }}</td>
+                                        <td class="py-2 px-4 border-b">{{ formatDate(user.created_at) }}</td>
+                                        <td class="py-2 px-4 border-b">
+                                            <!-- Edit and Delete Buttons -->
+                                            <button class="text-blue-500 text-white bg-sky-500 p-2"
+                                                @click="handleEdit(user)">Edit</button>
+                                            <button class="text-red-500 text-white ml-2 bg-red-900 p-2"
+                                                @click="handleDelete(user)">Block</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
 
                             </table>
                         </div>

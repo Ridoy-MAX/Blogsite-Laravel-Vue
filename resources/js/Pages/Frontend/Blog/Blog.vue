@@ -5,13 +5,18 @@ import Layout from '@/Layouts/Index.vue';
 import BlogCard from '../../../Components/BlogCard.vue';
 import './Blog.css';
 // Define props received from layout
-defineProps({
-    auth: Object,
-    canLogin: Boolean,
-    canRegister: Boolean,
-    laravelVersion: String,
-    phpVersion: String,
+
+const props = defineProps({
+    blogs: {
+        type: Array,
+        required: true
+    }
 });
+const truncateText = (text, wordLimit = 5) => {
+    const words = text.split(' ');
+    return words.slice(0, wordLimit).join(' ') + (words.length > wordLimit ? '...' : '');
+};
+
 </script>
 
 <template>
@@ -40,66 +45,31 @@ defineProps({
     </div>
     <div class="container">
         <div class="row">
-            <BlogCard 
+            <!-- <BlogCard 
                 imageSrc="/blog/two.jpg" 
                 title="Top 10 Google’s Most Searched Movies in the World (2022)"
                 author="Ridoy Hasan" 
                 :views="20" 
                 date="15 August 2024" 
                 :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-            <BlogCard 
-                imageSrc="/blog/two.jpg" 
-                title="Top 10 Google’s Most Searched Movies in the World (2022)"
-                author="Ridoy Hasan" 
-                :views="20" 
-                date="15 August 2024" 
-                :link="route('blog.details')"  
-            />
-          
-           
+            /> -->
 
-        
+            <BlogCard v-for="(blog, index) in blogs" 
+                :imageSrc="blog.image"
+                :title="truncateText(blog.title)"
+                :author="blog.user.name" 
+                :views="blog.view" 
+                :date="new Date(blog.created_at).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month:
+                        'long', year: 'numeric'
+                })" 
+                :link="route('blog.details', blog.slug)" />
+
+
+
+
+
 
 
 

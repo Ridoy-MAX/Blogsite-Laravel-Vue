@@ -10,6 +10,7 @@ import './Home.css';
 
 // Define props received from layout
 defineProps({
+  blogs: Array,
   auth: Object,
   canLogin: Boolean,
   canRegister: Boolean,
@@ -80,7 +81,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <Blog />
+      <Blog :blogs="blogs"/>
       <About />
       <Contact />
     </Layout>

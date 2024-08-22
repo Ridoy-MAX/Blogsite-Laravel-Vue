@@ -22,19 +22,23 @@ const showingNavigationDropdown = ref(false);
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('home')">
 
-                                    <ApplicationLogo
+                                    <!-- <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-                                    />
+                                    /> -->
+                                    <i class="fa-solid fa-icons" style="font-size: 25px;color: aliceblue;"></i>
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')"  style="text-decoration: none;">
+                                    All Users
                                 </NavLink>
-                                <NavLink :href="route('block.user')" :active="route().current('block.user')">
+                                <NavLink :href="route('block.user')" :active="route().current('block.user')" style="text-decoration: none;" >
                                     Block User
+                                </NavLink>
+                                <NavLink :href="route('blogs')" :active="route().current('blogs')" style="text-decoration: none;">
+                                    Blogs
                                 </NavLink>
                             </div>
                         </div>
@@ -118,11 +122,14 @@ const showingNavigationDropdown = ref(false);
                 >
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                            All Users
                         </ResponsiveNavLink>
 
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <ResponsiveNavLink :href="route('block.user')" :active="route().current('block.user')">
                             Block Users
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('blogs')" :active="route().current('blogs')">
+                            Blogs
                         </ResponsiveNavLink>
                     </div>
 

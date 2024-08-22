@@ -19,7 +19,9 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.6.0",
+        "filepond": "^4.31.2",
         "sweetalert2": "^11.12.4",
+        "vue-filepond": "^7.0.4",
         "vuex": "^4.1.0"
     }
 }
