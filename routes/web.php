@@ -40,6 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::post('Admin/blogs/add', [BlogController::class, 'blogs_add'])->name('blog.add');
     Route::get('/blog/delete/{slug}', [BlogController::class, 'blog_delete'])->name('blog.delete');
     Route::get('/blog/edit/{slug}', [BlogController::class, 'blog_edit'])->name('blog.edit');
+
+    // tag  
+    Route::post('Admin/tag/add', [BlogController::class, 'tag_add'])->name('tag.add');
+    Route::get('Admin/tag/', [BlogController::class, 'tag'])->name('tag');
+    Route::get('Admin/delete/{id}', [BlogController::class, 'tag_delete'])->name('tag.delete');
+
+    
     // home page
     Route::get('Admin/home/banner', [HomeController::class, 'home_banner'])->name('home.banner');
     Route::post('Admin/home/banner/update', [HomeController::class, 'home_banner_update'])->name('home.banner.update');

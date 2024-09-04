@@ -35,6 +35,8 @@ const props = defineProps({
         required: true
     }
 });
+
+console.log(props.blogs);
 </script>
 
 <template>
@@ -64,6 +66,11 @@ const props = defineProps({
                         <h2>{{ props.blogs.title }} </h2>
                         <div class="count d-flex ">
                             <span><i class="fa-regular fa-user me-1"></i>{{ props.blogs.user.name }}</span>
+
+                            <span v-for="(tag, index) in props.blogs.tags" :key="index" class="badge bg-success ms-1">
+                            {{ tag.name }}
+                            </span>
+
                             <span><i class="fa-regular fa-eye ms-5 me-1"></i>{{ props.blogs.view }} </span>
                             <span><i class="fa-regular fa-calendar-days ms-5"></i>
                                 {{ new Date(props.blogs.created_at).toLocaleDateString('en-GB', {

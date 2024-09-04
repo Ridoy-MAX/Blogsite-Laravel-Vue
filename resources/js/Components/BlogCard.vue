@@ -79,6 +79,7 @@ defineProps({
     height: 200px;
     width: 100%;
     background-size: cover;
+    
 
 }
 

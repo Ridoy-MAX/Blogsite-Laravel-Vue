@@ -6,9 +6,20 @@ import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 
+
+const props = defineProps({
+    tags: {
+        type: Array, // Adjusted to Array since tags is a collection
+        required: true
+    }
+});
+
+console.log(props.tags);
+
 // Use the useForm hook to handle form data and submission
 const form = useForm({
     title: '',
+    tags: '',
     description: '',
     status: '',
     image: null, // To store uploaded image
@@ -47,6 +58,7 @@ const submitForm = () => {
 </script>
 
 <template>
+
     <Head title="Blog Create" />
     <AuthenticatedLayout>
         <section>
@@ -87,8 +99,20 @@ const submitForm = () => {
                     </div>
 
                     <div>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Tags</p>
+                        <select v-model="form.tags" multiple class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-100" style="height: 300px;">
+                            <option disabled>Select tag</option>
+                            <option v-for="(tag, index) in tags" :key="index" :value="tag.id">
+                                {{ tag.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Upload Image</p>
-                        <input type="file" ref="fileInputRef" @change="form.image = $event.target.files[0]" name="image">
+                        <input type="file" ref="fileInputRef" @change="form.image = $event.target.files[0]"
+                            name="image">
+
                         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                             {{ form.progress.percentage }}%
                         </progress>

@@ -12,6 +12,9 @@ const props = defineProps({
         required: true
     }
 });
+
+console.log(props.blogs);
+
 const truncateText = (text, wordLimit = 5) => {
     const words = text.split(' ');
     return words.slice(0, wordLimit).join(' ') + (words.length > wordLimit ? '...' : '');
@@ -57,7 +60,7 @@ const truncateText = (text, wordLimit = 5) => {
             <BlogCard v-for="(blog, index) in blogs" 
                 :imageSrc="blog.image"
                 :title="truncateText(blog.title)"
-                :author="blog.user.name" 
+                :author="ridoy" 
                 :views="blog.view" 
                 :date="new Date(blog.created_at).toLocaleDateString('en-GB', {
                     day: '2-digit',

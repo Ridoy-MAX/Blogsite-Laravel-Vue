@@ -40,6 +40,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('blogs')" :active="route().current('blogs')" style="text-decoration: none;">
                                     Blogs
                                 </NavLink>
+                                <NavLink :href="route('tag')" :active="route().current('tag')" style="text-decoration: none;">
+                                    Tags
+                                </NavLink>
                                 <NavLink :href="route('home.banner')" :active="route().current('home.banner')" style="text-decoration: none;">
                                     CMS
                                 </NavLink>
@@ -136,6 +139,9 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('blogs')" :active="route().current('blogs')">
                             Blogs
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('tag')" :active="route().current('tag')">
+                            Tags
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('home.banner')" :active="route().current('home.banner')">
                             CMS
